@@ -7,6 +7,7 @@ mapBox.className = "map-box";
 body.appendChild(mapBox);
 //
 const map = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+map.id = "svg_map";
 //
 mapBox.appendChild(map);
 //
@@ -14,20 +15,29 @@ mapBox.appendChild(map);
 //
 
 
-let fetchedSVG = "";
 //
-fetch("../Irrelevant/LV_areas_opt.svg")
-// fetch("../media/svg/LV_areas_clean.svg")
+fetch("../media/svg/LV_areas_clean.svg")
   .then(response => response.text())
-  .then(svg => fetchedSVG = svg);
+  .then((response) => {
+    const fetchedSVG = response;
+
+    if (fetchedSVG.indexOf('<svg') === -1) {
+      return;
+    }
 
 
-const parser = new DOMParser();
-const parsedSVG = parser.parseFromString(fetchedSVG, "image/svg+xml");
-const rigaPath = parsedSVG.getElementById("heyhey");
+    const parser = new DOMParser();
+    const parsedSVG = parser.parseFromString(fetchedSVG, "image/svg+xml")
 
-console.log(parsedSVG)
+    console.log(fetchedSVG);
 
-mapBox.appendChild(rigaPath);
+    const rigaPath = parsedSVG.getElementById("01000");
+
+    if (null !== rigaPath) {
+      map.appendChild(rigaPath);
+    }
+
+  });
+
 
 
